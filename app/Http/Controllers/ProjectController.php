@@ -165,7 +165,6 @@ class ProjectController extends Controller
 
 
     public function delete($id){
-     
 
         if(!Project::find($id)){
             return ResponseHelper::success_response(
@@ -174,12 +173,11 @@ class ProjectController extends Controller
             );
 
         }
-         
 
-          // authorize the user's action
-            $project = Project::find($id);
-            $this->authorize('delete', $project);
-            $project->delete();
+        // authorize the user's action
+        $project = Project::find($id);
+        $this->authorize('delete', $project);
+        $project->delete();
 
 
         return ResponseHelper::success_response(
