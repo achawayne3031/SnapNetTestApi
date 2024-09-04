@@ -19,12 +19,10 @@ class DashboardController extends Controller
         $total_employee = DBHelpers::count(Employee::class);
         $total_project = DBHelpers::count(Project::class);
 
-
         $data = [
             'total_employee' => $total_employee,
             'total_project' => $total_project,
         ];
-
 
         return ResponseHelper::success_response(
             'Summary fetched was successful',
@@ -34,7 +32,20 @@ class DashboardController extends Controller
 
 
     public function projects(){
-        $projects = Project::query()->with(['employee'])->get();
+
+
+        try {
+            $projects = Project::query()->with(['employee'])->get();
+
+        } catch (Exception $e) {
+            return ResponseHelper::error_response(
+                'Server Error',
+                $e->getMessage(),
+                401,
+                $e->getLine()
+            );
+        }
+
 
         return ResponseHelper::success_response(
          'All project fetched was successful',
@@ -45,7 +56,18 @@ class DashboardController extends Controller
 
 
     public function paginated_employee(){
-        $employee = Employee::query()->with(['project'])->paginate(10);
+
+        try {
+            $employee = Employee::query()->with(['project'])->paginate(10);
+
+        } catch (Exception $e) {
+            return ResponseHelper::error_response(
+                'Server Error',
+                $e->getMessage(),
+                401,
+                $e->getLine()
+            );
+        }
 
         return ResponseHelper::success_response(
             'All employee fetched was successful',
@@ -53,5 +75,11 @@ class DashboardController extends Controller
         );
     }
 
+
+    public function filter(Request $request){
+
+
+
+    }
 
 }

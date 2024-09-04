@@ -25,8 +25,20 @@ class EmployeeController extends Controller
 
 
     public function all(){
-        $employee = Employee::query()->with(['project'])->get();
- 
+
+        try {
+
+            $employee = Employee::query()->with(['project'])->get();
+
+        } catch (Exception $e) {
+            return ResponseHelper::error_response(
+                'Server Error',
+                $e->getMessage(),
+                401,
+                $e->getLine()
+            );
+        }
+
         return ResponseHelper::success_response(
          'All employee fetched was successful',
             $employee
@@ -95,7 +107,20 @@ class EmployeeController extends Controller
 
         }
 
-        $employee = Employee::query()->with(['project'])->where(['id' => $id])->get();
+        try {
+
+            $employee = Employee::query()->with(['project'])->where(['id' => $id])->get();
+
+        } catch (Exception $e) {
+            return ResponseHelper::error_response(
+                'Server Error',
+                $e->getMessage(),
+                401,
+                $e->getLine()
+            );
+        }
+
+
          return ResponseHelper::success_response(
              'Employee data was fetched successfully',
              $employee

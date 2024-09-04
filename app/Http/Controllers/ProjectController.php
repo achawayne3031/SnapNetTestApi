@@ -18,7 +18,19 @@ class ProjectController extends Controller
     //
 
     public function all(){
-       $projects = Project::query()->with(['employee'])->get();
+
+        try {
+            $projects = Project::query()->with(['employee'])->get();
+
+        } catch (Exception $e) {
+            return ResponseHelper::error_response(
+                'Server Error',
+                $e->getMessage(),
+                401,
+                $e->getLine()
+            );
+        }
+
 
        return ResponseHelper::success_response(
         'All project fetched was successful',
@@ -147,7 +159,7 @@ class ProjectController extends Controller
 
 
            // authorize the user's action
-           $this->authorize('delete', $employee);
+        $this->authorize('delete', $employee);
 
         if(!DBHelpers::exists(Project::class, ['id' => $id])){
             return ResponseHelper::error_response(
