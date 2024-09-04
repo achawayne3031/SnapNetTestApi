@@ -14,6 +14,7 @@ use App\Models\Employee;
 
 use App\Helpers\DBHelpers;
 use App\Helpers\Func;
+use App\Jobs\SendEmail;
 
 
 
@@ -55,6 +56,8 @@ class EmployeeController extends Controller
     
                     /// Save  /////
                     DBHelpers::create_query(Employee::class, $data);
+
+                    SendEmail::dispatch($data);
             
                     return ResponseHelper::success_response(
                         'Employee creation was successful',

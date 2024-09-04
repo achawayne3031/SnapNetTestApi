@@ -147,7 +147,7 @@ class ProjectController extends Controller
 
 
            // authorize the user's action
-           $this->authorize('update', $employee);
+           $this->authorize('delete', $employee);
 
         if(!DBHelpers::exists(Project::class, ['id' => $id])){
             return ResponseHelper::error_response(

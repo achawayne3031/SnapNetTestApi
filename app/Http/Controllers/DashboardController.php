@@ -43,4 +43,15 @@ class DashboardController extends Controller
     }
 
 
+
+    public function paginated_employee(){
+        $employee = Employee::query()->with(['project'])->paginate(10);
+
+        return ResponseHelper::success_response(
+            'All employee fetched was successful',
+            $employee
+        );
+    }
+
+
 }

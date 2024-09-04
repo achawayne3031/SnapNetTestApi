@@ -91,6 +91,10 @@ Route::group(
     function ($router) {
         Route::get('/summary', 'DashboardController@summary');
         Route::get('/projects', 'DashboardController@projects');
+        Route::get('/paginated-employee', 'DashboardController@paginated_employee');
+
+
+        
     }
 );
 
