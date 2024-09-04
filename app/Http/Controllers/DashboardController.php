@@ -22,6 +22,7 @@ class DashboardController extends Controller
         $data = [
             'total_employee' => $total_employee,
             'total_project' => $total_project,
+            
         ];
 
         return ResponseHelper::success_response(
