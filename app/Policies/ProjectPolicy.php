@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Employee;
+use App\Models\User;
 use App\Models\Project;
 
 
@@ -16,14 +16,14 @@ class ProjectPolicy
         //
     }
 
-    public function update(Employee $employee, Project $project)
+    public function update(Users $user, Project $project)
     {
-        return $employee->project_id === $project->user_id;
+        return $user->id === $project->user_id;
     }
 
-    public function delete(Employee $employee, Project $project)
+    public function delete(Users $user, Project $project)
     {
-        return $employee->project_id === $project->user_id;
+        return $user->project_id === $project->user_id;
     }
 
 }

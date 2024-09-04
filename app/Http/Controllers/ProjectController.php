@@ -12,6 +12,10 @@ use App\Models\Project;
 use App\Helpers\DBHelpers;
 use App\Helpers\Func;
 use App\Models\Employee;
+use App\Models\User;
+
+
+
 
 class ProjectController extends Controller
 {
@@ -99,14 +103,14 @@ class ProjectController extends Controller
 
 
     
-    public function edit(Request $request, Employee $employee)
+    public function edit(Request $request, User $user)
     {
         if ($request->isMethod('post')) {
             $validate = ProjectValidator::validate_rules($request, 'edit');
             if (!$validate->fails() && $validate->validated()) {
 
                   // authorize the user's action
-                $this->authorize('update', $employee);
+                $this->authorize('update', $user);
         
 
                 if(!DBHelpers::exists(Project::class, ['id' => $request->id])){
@@ -155,11 +159,11 @@ class ProjectController extends Controller
 
 
 
-    public function delete($id, Employee $employee){
+    public function delete($id, User $user){
 
 
            // authorize the user's action
-        $this->authorize('delete', $employee);
+        $this->authorize('delete', $user);
 
         if(!DBHelpers::exists(Project::class, ['id' => $id])){
             return ResponseHelper::error_response(
