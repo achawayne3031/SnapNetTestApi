@@ -16,14 +16,14 @@ class ProjectPolicy
         //
     }
 
-    public function update(Users $user, Project $project)
+    public function update(User $user, Project $project)
     {
         return $user->id === $project->user_id;
     }
 
-    public function delete(Users $user, Project $project)
+    public function delete(User $user, Project $project)
     {
-        return $user->project_id === $project->user_id;
+        return $user->id === $project->user_id;
     }
 
 }

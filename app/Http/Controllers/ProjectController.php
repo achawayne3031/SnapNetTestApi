@@ -49,11 +49,15 @@ class ProjectController extends Controller
             $validate = ProjectValidator::validate_rules($request, 'create');
             if (!$validate->fails() && $validate->validated()) {
 
+                $user = auth()->user();
+
+
                 $data = [
                     'name' => $request->name,
                     'description' => $request->description,
                     'start_date' => $request->start_date,
-                    'end_date' => $request->end_date
+                    'end_date' => $request->end_date,
+                    'user_id' => $user->id
                 ];
 
                 /// Save  /////
@@ -86,11 +90,11 @@ class ProjectController extends Controller
 
 
     public function show($id){
-        if(!DBHelpers::exists(Project::class, ['id' => $id])){
-            return ResponseHelper::error_response(
-                'Project not found',
-                [],
-                404
+
+        if(!Project::find($id)){
+            return ResponseHelper::success_response(
+                'Project not found or deleted',
+                null
             );
         }
 
@@ -103,22 +107,18 @@ class ProjectController extends Controller
 
 
     
-    public function edit(Request $request, User $user)
+    public function edit(Request $request)
     {
         if ($request->isMethod('post')) {
             $validate = ProjectValidator::validate_rules($request, 'edit');
             if (!$validate->fails() && $validate->validated()) {
 
-                  // authorize the user's action
-                $this->authorize('update', $user);
-        
-
-                if(!DBHelpers::exists(Project::class, ['id' => $request->id])){
-                    return ResponseHelper::error_response(
-                        'Project not found',
-                        [],
-                        401
+                if(!Project::find($request->id)){
+                    return ResponseHelper::success_response(
+                        'Project not found or deleted',
+                        null
                     );
+        
                 }
 
                $project = DBHelpers::query_filter_first(Project::class, ['id' => $request->id]);
@@ -129,6 +129,11 @@ class ProjectController extends Controller
                    'end_date' => $request->end_date ? $request->end_date : $project->end_date,
                    'description' => $request->description ? $request->description : $project->description,
                ];
+
+
+
+               $project = Project::find($request->id);
+               $this->authorize('update', $project);
 
                DBHelpers::update_query_v3(Project::class, $update_data, ['id' => $request->id]);
             
@@ -159,23 +164,22 @@ class ProjectController extends Controller
 
 
 
-    public function delete($id, User $user){
+    public function delete($id){
+     
 
-
-           // authorize the user's action
-        $this->authorize('delete', $user);
-
-        if(!DBHelpers::exists(Project::class, ['id' => $id])){
-            return ResponseHelper::error_response(
-                'Project not found',
-                [],
-                404
+        if(!Project::find($id)){
+            return ResponseHelper::success_response(
+                'Project not found or deleted',
+                null
             );
+
         }
+         
 
-
-        $project = Project::find($id);
-        $project->delete();
+          // authorize the user's action
+            $project = Project::find($id);
+            $this->authorize('delete', $project);
+            $project->delete();
 
 
         return ResponseHelper::success_response(
